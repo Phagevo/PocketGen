@@ -22,10 +22,10 @@ from .common import *
 from .protein_features import *
 from .esmadapter import *
 from .esm2adapter import *
-from utils.pdb_utils import VOCAB
-from utils.rmsd import kabsch_torch
-from utils.protein_ligand import PDBProtein
-from utils.relax import openmm_relax
+from ..utils.pdb_utils import VOCAB
+from ..utils.rmsd import kabsch_torch
+from ..utils.protein_ligand import PDBProtein
+from ..utils.relax import openmm_relax
 
 ATOM_FAMILIES = ['Acceptor', 'Donor', 'Aromatic', 'Hydrophobe', 'LumpedHydrophobe', 'NegIonizable', 'PosIonizable',
                  'ZnBinder']

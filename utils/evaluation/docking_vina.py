@@ -10,9 +10,8 @@ import AutoDockTools
 import os
 import contextlib
 
-from utils.reconstruct import reconstruct_from_generated
-from utils.evaluation.docking_qvina import get_random_id, BaseDockingTask
-
+from ..reconstruct import reconstruct_from_generated
+from ..evaluation.docking_qvina import get_random_id, BaseDockingTask
 
 def supress_stdout(func):
     def wrapper(*a, **ka):
