@@ -355,7 +355,7 @@ class Pocket_Design_new(Module):
                 batch_size = res_batch.max().item() + 1
                 encoder_out = {
                     'feats': torch.zeros(batch_size, full_seq.shape[1], self.hidden_channels).to(self.device)}
-                encoder_out['feats'][batch['r10_mask']] = h_residue.view(-1, self.hidden_channels)
+                encoder_out['feats'][batch['r10_mask']] = h_residue.view(batch['r10_mask'].sum(), self.hidden_channels)
                 init_pred = full_seq
                 decode_logits = self.esmadapter(init_pred, encoder_out)['logits']
                 pred_res_type = decode_logits[batch['full_seq_mask']][:, 4:24]
