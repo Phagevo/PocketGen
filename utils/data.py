@@ -174,9 +174,15 @@ def collate_mols_block(mol_dicts, batch_converter):
     data_batch['full_seq_mask'] = torch.zeros_like(data_batch['seq']).bool()
     data_batch['r10_mask'] = torch.zeros_like(data_batch['seq']).bool()
     for b in range(batch_size):
+
+        # Avoid size mismatch
+        if data_batch['seq'][b].size(dim=0) < (mol_dicts[b]['full_seq_idx']+1)[0]:
+            continue
+
         data_batch['seq'][b][mol_dicts[b]['full_seq_idx']+1] = mask_id
         data_batch['full_seq_mask'][b][mol_dicts[b]['full_seq_idx']+1] = True
         data_batch['r10_mask'][b][mol_dicts[b]['r10_idx'] + 1] = True
+
     data_batch['protein_filename'] = [mol_dict['whole_protein_name'] for mol_dict in mol_dicts]
     data_batch['pocket_filename'] = [mol_dict['protein_filename'] for mol_dict in mol_dicts]
     data_batch['ligand_filename'] = [mol_dict['ligand_filename'] for mol_dict in mol_dicts]
