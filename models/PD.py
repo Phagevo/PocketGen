@@ -26,6 +26,7 @@ from ..utils.pdb_utils import VOCAB
 from ..utils.rmsd import kabsch_torch
 from ..utils.protein_ligand import PDBProtein
 from ..utils.relax import openmm_relax
+import os 
 
 ATOM_FAMILIES = ['Acceptor', 'Donor', 'Aromatic', 'Hydrophobe', 'LumpedHydrophobe', 'NegIonizable', 'PosIonizable',
                  'ZnBinder']
@@ -366,6 +367,7 @@ class Pocket_Design_new(Module):
         rmsd = torch.sqrt((res_X[residue_mask][:, :4].reshape(-1, 3) - label_X[residue_mask][:, :4].reshape(-1, 3)).norm(dim=1).sum() / len(label_S[residue_mask]) / 4)
         
         if self.write_pdb:
+            print("file name:",batch['protein_filename'])
             res_S[residue_mask] = self.alphabet2standard[sampled_type.detach().clone()] + 1
             to_sdf(pred_ligand, batch['ligand_element'].long(), batch['ligand_mask'].bool(), batch['ligand_batch'],batch['ligand_bond_type'].long(), batch['ligand_bond_index'].long(), batch['edge_batch'], self.generate_id, target_path)
             to_pdb(label_X, batch['amino_acid'], batch['res_idx'], batch['amino_acid_batch'], self.generate_id, batch['protein_filename'], target_path, original=True)
@@ -547,6 +549,7 @@ def to_pdb(res_X, amino_acid, res_idx, res_batch, index, pocket_filename, target
 def to_whole_pdb(res_X, amino_acid, res_idx, res_batch, index, protein_filename, r10_mask, orig_data_path, target_path):
     lines = ['HEADER    POCKET', 'COMPND    POCKET\n']
     num_protein = res_batch.max().item() + 1
+    os.makedirs(target_path, exist_ok=True)
     for n in range(num_protein):
         pdb_path = protein_filename[n]
         with open(pdb_path, 'r') as f:
@@ -559,7 +562,7 @@ def to_whole_pdb(res_X, amino_acid, res_idx, res_batch, index, protein_filename,
         amino_acid_protein = amino_acid[mask]
         res_idx_protein = res_idx[mask]
         assert r10_mask[n].sum() == len(amino_acid_protein)
-
+        os.makedirs(target_path, exist_ok=True)
         path = os.path.join(target_path, str(index + n) + '_whole.pdb')
         atom_count = 0
         stored_res_count = 0
@@ -627,7 +630,7 @@ def to_sdf(pred_pos, elements, mask, ligand_batch, bond_types, bond_index, edge_
         for i, position in enumerate(positions):
             conf.SetAtomPosition(i, position.tolist())
         mol.AddConformer(conf)
-
+        os.makedirs(target_path, exist_ok=True)
         writer = Chem.SDWriter(filename)
         writer.write(mol)
         writer.close()

@@ -186,6 +186,9 @@ def collate_mols_block(mol_dicts, batch_converter):
     data_batch['protein_filename'] = [mol_dict['whole_protein_name'] for mol_dict in mol_dicts]
     data_batch['pocket_filename'] = [mol_dict['protein_filename'] for mol_dict in mol_dicts]
     data_batch['ligand_filename'] = [mol_dict['ligand_filename'] for mol_dict in mol_dicts]
+    print("prot:",data_batch['protein_filename'])
+    print("ligand:",data_batch['ligand_filename'])
+    print("pocket:",data_batch['pocket_filename'])
     return data_batch
 
 
