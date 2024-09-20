@@ -11,7 +11,7 @@ import numpy as np
 os.environ['OPENMM_CPU_THREADS'] = '4'  # prevent openmm from using all cpus available
 from openmm import LangevinIntegrator, Platform, CustomExternalForce
 from openmm.app import PDBFile, Simulation, ForceField, HBonds, Modeller
-from simtk.unit import kilocalories_per_mole, angstroms
+from simtk.unit import kilocalories_per_mole, angstroms, kilojoules_per_mole,nanometers
 from pdbfixer import PDBFixer
 
 import logging
@@ -24,8 +24,8 @@ CACHE_DIR = '.data/saved/'
 
 
 def openmm_relax(pdb, out_pdb=None, excluded_chains=None, inverse_exclude=False):
-    tolerance = 2.39 * kilocalories_per_mole
-    stiffness = 10.0 * kilocalories_per_mole / (angstroms ** 2)
+    tolerance = 2.39 * kilojoules_per_mole / nanometers
+    stiffness = 10.0 * kilojoules_per_mole / (angstroms ** 2)
 
     if excluded_chains is None:
         excluded_chains = []
